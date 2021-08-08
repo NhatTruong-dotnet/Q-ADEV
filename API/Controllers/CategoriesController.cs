@@ -43,6 +43,7 @@ namespace API.Controllers
 
         #region GetMethod
         [HttpGet]
+        [Route("")]
         public List<Category> GetCategories()
         {
             List<Category> categories = _stackOverflowContext.Categories.ToList();
@@ -50,6 +51,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Route("{CategoryID}")]
         public Category GetCategoryByID(int CategoryID)
         {
             Category  category = _stackOverflowContext.Categories.Where(item => item.CategoryId == CategoryID).FirstOrDefault(); 

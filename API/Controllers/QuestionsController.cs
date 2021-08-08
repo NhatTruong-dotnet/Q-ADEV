@@ -75,12 +75,14 @@ namespace API.Controllers
 
         #region GetMethod
         [HttpGet]
+        [Route("")]
         public List<Question> GetQuestions()
         {
             List<Question> questions = _stackOverflowContext.Questions.OrderByDescending(item => item.QuestionDateAndTime).ToList();
             return questions;
         }
         [HttpGet]
+        [Route("{questionsID}")]
         public Question GetQuestionbyID(int questionsID)
         {
             Question question = _stackOverflowContext.Questions.Where(item => item.QuestionId == questionsID).FirstOrDefault() ;

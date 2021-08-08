@@ -43,6 +43,7 @@ namespace API.Controllers
 
         #region GetMethod
         [HttpGet]
+        [Route("")]
         public List<User> GetUsers()
         {
             List<User> users = _stackOverflowContext.Users.Where(user => user.IsAdmin == false).OrderBy(item => item.Name).ToList();
@@ -50,6 +51,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Route("{email}")]
         public User GetUserByEmail(string email)
         {
             User user = _stackOverflowContext.Users.Where(user => user.Email == email ).FirstOrDefault();
@@ -57,6 +59,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Route("lastestUserID")]
         public int GetLastestUserId()
         {
             int userID = _stackOverflowContext.Users.Select(user => user.UserId).Max();

@@ -41,7 +41,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public void UpdateAnswern(Answer answer)
+        public void UpdateAnswer(Answer answer)
         {
             _repositoryImp.Update<Answer>(answer);
         }
@@ -63,6 +63,7 @@ namespace API.Controllers
 
         #region GetMethod
         [HttpGet]
+        [Route("question/{questionsID}")]
         public List<Answer> GetAnswersByQuestionID(int questionsID)
         {
             List<Answer> anwers = _stackOverflowContext.Answers.Where(item => item.QuestionId == questionsID).OrderBy(item => item.AnswerDateAndTime).ToList();
@@ -70,6 +71,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Route("{answerID}")]
         public Answer GetAnswersID(int answerID)
         {
             Answer anwer = _stackOverflowContext.Answers.Where(item => item.AnswerId == answerID).FirstOrDefault();
