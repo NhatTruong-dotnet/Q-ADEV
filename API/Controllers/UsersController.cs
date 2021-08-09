@@ -1,4 +1,6 @@
-﻿using API.Models;
+﻿using API.Controllers.Helper;
+using API.Models;
+using API.Models.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,43 +25,111 @@ namespace API.Controllers
 
         #region PostMethod
         [HttpPost]
-        public void InsertUser(User user)
+        public int InsertUser(RegisterDTO user)
         {
-            _repositoryImp.Insert<User>(user);
+            User insertUser = new User();
+            insertUser.Email = user.Email;
+            insertUser.Name = user.Name;
+            insertUser.PasswordHash = SHA256HashGenerator.GenerateHash(user.Password);
+            insertUser.Mobile = user.Mobile;
+
+            _repositoryImp.Insert<User>(insertUser);
+            return GetLastestUserId();
         }
 
         [HttpPost]
-        public void DeleteUser(User user)
+        public void DeleteUser(UserDTO user)
         {
-            _repositoryImp.Delete<User>(user);
+            User deleteUser = GetUserByEmail(user.Email);
+            _repositoryImp.Delete<User>(deleteUser);
         }
 
         [HttpPost]
-        public void UpdateUser(User user)
+        public void UpdateUser(UserDTO user)
         {
-            _repositoryImp.Update<User>(user);
+            User updateUser = GetUserByEmail(user.Email);
+            updateUser.Email = user.Email;
+            updateUser.Name = user.Name;
+            updateUser.PasswordHash = SHA256HashGenerator.GenerateHash(user.Password);
+            updateUser.Mobile = user.Mobile;
+            _repositoryImp.Update<User>(updateUser);
         }
         #endregion
 
         #region GetMethod
         [HttpGet]
         [Route("")]
-        public List<User> GetUsers()
+        public List<UserDTO> GetUsers()
         {
-            List<User> users = _stackOverflowContext.Users.Where(user => user.IsAdmin == false).OrderBy(item => item.Name).ToList();
+            List<User> usersInDB = _stackOverflowContext.Users.Where(user => user.IsAdmin == false).OrderBy(item => item.Name).ToList();
+            List<UserDTO> users = new List<UserDTO>();
+            foreach (User item in usersInDB)
+            {
+                users.Add(new UserDTO
+                {
+                    Email = item.Email,
+                    Name = item.Name,
+                    IsAdmin = item.IsAdmin,
+                    Mobile = item.Mobile,
+                    UserID = item.UserId,
+                    Password = item.PasswordHash
+                });
+            }
             return users;
         }
 
-        [HttpGet]
-        [Route("{email}")]
         public User GetUserByEmail(string email)
         {
-            User user = _stackOverflowContext.Users.Where(user => user.Email == email ).FirstOrDefault();
+            User user = _stackOverflowContext.Users.Where(user => user.Email == email).FirstOrDefault();
             return user;
         }
 
         [HttpGet]
-        [Route("lastestUserID")]
+        [Route("{userID}")]
+        public UserDTO GetUserByID(int userID)
+        {
+            User userInDB = _stackOverflowContext.Users.Where(user => user.UserId == userID).FirstOrDefault();
+            UserDTO user = null;
+            if (userInDB != null)
+            {
+                user = new UserDTO()
+                {
+                    Email = userInDB.Email,
+                    Name = userInDB.Name,
+                    IsAdmin = userInDB.IsAdmin,
+                    Mobile = userInDB.Mobile,
+                    UserID = userInDB.UserId,
+                    Password = userInDB.PasswordHash
+                };
+            }
+
+
+            return user;
+        }
+
+        [HttpGet]
+        [Route("{email}/{password}")]
+        public UserDTO GetUserByEmailAndPassword(string email, string password)
+        {
+            User userInDB = _stackOverflowContext.Users.Where(user => user.Email == email && user.PasswordHash == SHA256HashGenerator.GenerateHash(password)).FirstOrDefault();
+            UserDTO user = null;
+            if (userInDB != null)
+            {
+                user = new UserDTO()
+                {
+                    Email = userInDB.Email,
+                    Name = userInDB.Name,
+                    IsAdmin = userInDB.IsAdmin,
+                    Mobile = userInDB.Mobile,
+                    UserID = userInDB.UserId,
+                    Password = userInDB.PasswordHash
+                };
+            }
+
+
+            return user;
+        }
+
         public int GetLastestUserId()
         {
             int userID = _stackOverflowContext.Users.Select(user => user.UserId).Max();
