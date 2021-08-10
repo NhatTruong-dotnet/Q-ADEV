@@ -25,6 +25,7 @@ namespace API.Controllers
 
         #region PostMethod
         [HttpPost]
+        [Route("Register")]
         public int InsertUser(RegisterDTO user)
         {
             User insertUser = new User();
@@ -38,6 +39,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Route("Delete")]
         public void DeleteUser(UserDTO user)
         {
             User deleteUser = GetUserByEmail(user.Email);
@@ -45,6 +47,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Route("Update")]
         public void UpdateUser(UserDTO user)
         {
             User updateUser = GetUserByEmail(user.Email);

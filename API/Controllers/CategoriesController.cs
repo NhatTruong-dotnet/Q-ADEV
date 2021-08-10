@@ -1,4 +1,5 @@
 ﻿using API.Models;
+using API.Models.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,38 +24,72 @@ namespace API.Controllers
 
         #region PostMethod
         [HttpPost]
-        public void InsertUser(Category category)
+        [Route("Add")]
+        public void InsertUser(CategoryDTO category)
         {
-            _repositoryImp.Insert<Category>(category);
+            Category insertCategory = new Category() { 
+                CategoryName = category.CategoryName 
+            };
+            _repositoryImp.Insert<Category>(insertCategory);
         }
 
         [HttpPost]
-        public void DeleteUser(Category category)
+        [Route("Delete")]
+        public void DeleteUser(CategoryDTO category)
         {
-            _repositoryImp.Delete<Category>(category);
+            Category deleteCategory = new Category() { 
+                CategoryId = category.CategoryID, 
+                CategoryName = category.CategoryName 
+            };
+            _repositoryImp.Delete<Category>(deleteCategory);
         }
 
         [HttpPost]
-        public void UpdateUser(Category category)
+        [Route("Update")]
+        public void UpdateUser(CategoryDTO category)
         {
-            _repositoryImp.Update<Category>(category);
+            Category updateCategory = new Category()
+            {
+                CategoryId = category.CategoryID,
+                CategoryName = category.CategoryName
+            };
+            _repositoryImp.Update<Category>(updateCategory);
         }
         #endregion
 
         #region GetMethod
         [HttpGet]
         [Route("")]
-        public List<Category> GetCategories()
+        public List<CategoryDTO> GetCategories()
         {
-            List<Category> categories = _stackOverflowContext.Categories.ToList();
+            List<Category> categoriesInDB = _stackOverflowContext.Categories.ToList();
+            List<CategoryDTO> categories = new List<CategoryDTO>();
+            foreach (Category item in categoriesInDB)
+            {
+                categories.Add(new CategoryDTO()
+                {
+                    CategoryID = item.CategoryId,
+                    CategoryName = item.CategoryName
+                });
+            }
             return categories;
         }
 
         [HttpGet]
         [Route("{CategoryID}")]
-        public Category GetCategoryByID(int CategoryID)
+        public CategoryDTO GetCategoryByID(int CategoryID)
         {
-            Category  category = _stackOverflowContext.Categories.Where(item => item.CategoryId == CategoryID).FirstOrDefault(); 
+            Category categoryInDB = _stackOverflowContext.Categories.Where(item => item.CategoryId == CategoryID).FirstOrDefault();
+            CategoryDTO category = null;
+            if (categoryInDB != null)
+            {
+                category = new CategoryDTO()
+                {
+                    CategoryName = categoryInDB.CategoryName,
+                    CategoryID = categoryInDB.CategoryId
+                };
+            }
+            
             return category;
         }
         #endregion
