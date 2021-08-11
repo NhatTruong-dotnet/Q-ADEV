@@ -1,6 +1,8 @@
 ﻿using API.Models;
+using API.Models.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,26 +29,43 @@ namespace API.Controllers
 
         #region PostMethod
         [HttpPost]
-        public void InsertAnswer(Answer answer)
+        [Route("Add")]
+        public void InsertAnswer(AnswerDTO answer)
         {
-            _repositoryImp.Insert<Answer>(answer);
-            _questionsController.UpdateQuestionAnswerCount(answer.QuestionId, 1);
+            Answer insertAnswer = new Answer()
+            {
+                AnswerText = answer.AnswerText,
+                AnswerDateAndTime = answer.AnswerDateAndTime,
+                QuestionId = answer.QuestionID,
+                UserId = answer.UserID,
+                VotesCount = answer.VotesCount
+            };
+            _repositoryImp.Insert<Answer>(insertAnswer);
+            _questionsController.UpdateQuestionAnswerCount(insertAnswer.QuestionId, 1);
         }
 
         [HttpPost]
-        public void DeleteAnswer(Answer answer)
+        [Route("Delete")]
+        public void DeleteAnswer(AnswerDTO answer)
         {
-            _repositoryImp.Delete<Answer>(answer);
-            _questionsController.UpdateQuestionAnswerCount(answer.QuestionId, -1);
+            Answer answerInDB = _stackOverflowContext.Answers.Where(item => item.AnswerId == answer.AnswerID).FirstOrDefault();
+
+            _repositoryImp.Delete<Answer>(answerInDB);
+            _questionsController.UpdateQuestionAnswerCount(answerInDB.QuestionId, -1);
         }
 
         [HttpPost]
-        public void UpdateAnswer(Answer answer)
+        [Route("Update")]
+        public void UpdateAnswer(AnswerDTO answer)
         {
-            _repositoryImp.Update<Answer>(answer);
+            Answer answerInDB = _stackOverflowContext.Answers.Where(item => item.AnswerId == answer.AnswerID).FirstOrDefault();
+            answerInDB.AnswerText = answer.AnswerText;
+            answerInDB.AnswerDateAndTime = answer.AnswerDateAndTime;
+            _repositoryImp.Update<Answer>(answerInDB);
         }
 
         [HttpPost]
+        [Route("Update/Votes/{answerID}/{userID}/{value}")]
         public void UpdateAnswerVotesCount(int answerID, int userID, int value)
         {
             Answer answer = _stackOverflowContext.Answers.Where(item => item.AnswerId == answerID).FirstOrDefault();
@@ -64,18 +83,58 @@ namespace API.Controllers
         #region GetMethod
         [HttpGet]
         [Route("question/{questionsID}")]
-        public List<Answer> GetAnswersByQuestionID(int questionsID)
+        public List<AnswerDTO> GetAnswersByQuestionID(int questionsID)
         {
-            List<Answer> anwers = _stackOverflowContext.Answers.Where(item => item.QuestionId == questionsID).OrderBy(item => item.AnswerDateAndTime).ToList();
-            return anwers;
+            List<Answer> anwersInDB = _stackOverflowContext.Answers.Where(item => item.QuestionId == questionsID).Include(item => item.Votes).OrderBy(item => item.AnswerDateAndTime).ToList();
+            List<AnswerDTO> answers = new List<AnswerDTO>();
+            foreach (Answer item in anwersInDB)
+            {
+                AnswerDTO insertAnswer = new AnswerDTO()
+                {
+                    AnswerID = item.AnswerId,
+                    AnswerText = item.AnswerText,
+                    AnswerDateAndTime = (DateTime)((DateTime)item.AnswerDateAndTime == null ? null : item.AnswerDateAndTime),
+                    UserID = (int)(item.UserId == null ? null : item.UserId),
+                    QuestionID = (int)item.QuestionId,
+                    VotesCount = (int)item.VotesCount,
+                    Votes = new List<VoteDTO>(),
+                    User = new UserDTO()
+                };
+                foreach (Vote voteAnswer in item.Votes)
+                {
+                    VoteDTO vote = new VoteDTO();
+                    {
+                        vote.AnswerID = (int)voteAnswer.AnswerId;
+                        vote.UserID = (int)voteAnswer.UserId;
+                        vote.VoteID = voteAnswer.VoteId;
+                        vote.VoteValue = (int)voteAnswer.VoteValue;
+                    }
+                    insertAnswer.Votes.Add(vote);
+
+                }
+                answers.Add(insertAnswer);
+            }
+            
+            return answers;
         }
 
         [HttpGet]
         [Route("{answerID}")]
-        public Answer GetAnswersID(int answerID)
+        public AnswerDTO GetAnswersID(int answerID)
         {
-            Answer anwer = _stackOverflowContext.Answers.Where(item => item.AnswerId == answerID).FirstOrDefault();
-            return anwer;
+            Answer answerInDB = _stackOverflowContext.Answers.Where(item => item.AnswerId == answerID).FirstOrDefault();
+            AnswerDTO answer = new AnswerDTO()
+            {
+                AnswerID = answerInDB.AnswerId,
+                AnswerText = answerInDB.AnswerText,
+                AnswerDateAndTime = (DateTime)((DateTime)answerInDB.AnswerDateAndTime == null ? null : answerInDB.AnswerDateAndTime),
+                UserID = (int)(answerInDB.UserId == null ? null : answerInDB.UserId),
+                QuestionID = (int)answerInDB.QuestionId,
+                VotesCount = (int)answerInDB.VotesCount,
+                Votes = new List<VoteDTO>(),
+                User = new UserDTO()
+            };
+            return answer;
         }
         #endregion
     }
