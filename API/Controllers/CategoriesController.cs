@@ -27,8 +27,9 @@ namespace API.Controllers
         [Route("Add")]
         public void InsertUser(CategoryDTO category)
         {
-            Category insertCategory = new Category() { 
-                CategoryName = category.CategoryName 
+            Category insertCategory = new Category()
+            {
+                CategoryName = category.CategoryName
             };
             _repositoryImp.Insert<Category>(insertCategory);
         }
@@ -37,23 +38,29 @@ namespace API.Controllers
         [Route("Delete")]
         public void DeleteUser(CategoryDTO category)
         {
-            Category deleteCategory = new Category() { 
-                CategoryId = category.CategoryID, 
-                CategoryName = category.CategoryName 
-            };
-            _repositoryImp.Delete<Category>(deleteCategory);
+            Category deleteCategory = _stackOverflowContext.Categories.Where(item => item.CategoryId == category.CategoryID).FirstOrDefault();
+            if (deleteCategory != null)
+            {
+                deleteCategory.CategoryId = category.CategoryID;
+                deleteCategory.CategoryName = category.CategoryName;
+                _repositoryImp.Delete<Category>(deleteCategory);
+            }
         }
 
         [HttpPost]
         [Route("Update")]
         public void UpdateUser(CategoryDTO category)
         {
-            Category updateCategory = new Category()
+
+            Category updateCategory = _stackOverflowContext.Categories.Where(item => item.CategoryId == category.CategoryID).FirstOrDefault();
+            if (updateCategory != null)
             {
-                CategoryId = category.CategoryID,
-                CategoryName = category.CategoryName
+                updateCategory.CategoryId = category.CategoryID;
+                updateCategory.CategoryName = category.CategoryName;
+                _repositoryImp.Update<Category>(updateCategory);
             };
-            _repositoryImp.Update<Category>(updateCategory);
+
+
         }
         #endregion
 
@@ -89,7 +96,7 @@ namespace API.Controllers
                     CategoryID = categoryInDB.CategoryId
                 };
             }
-            
+
             return category;
         }
         #endregion

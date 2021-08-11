@@ -1,6 +1,8 @@
 ﻿using API.Models;
+using API.Models.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,24 +24,51 @@ namespace API.Controllers
 
         #region PostMethod
         [HttpPost]
-        public void InsertQuestion(Question question)
+        [Route("Add")]
+        public void InsertQuestion(NewQuestionDTO question)
         {
-            _repositoryImp.Insert<Question>(question);
+            Question insertQuestion = new Question()
+            {
+                QuestionName = question.QuestionName,
+                QuestionDateAndTime = question.QuestionDateAndTime,
+                UserId = question.UserID,
+                CategoryId = question.CategoryID,
+                VotesCount = question.VotesCount,
+                ViewsCount = question.ViewsCount,
+                AnswersCount = question.AnswersCount
+            };
+            _repositoryImp.Insert<Question>(insertQuestion);
         }
 
         [HttpPost]
-        public void DeleteaQuestion(Question question)
+        [Route("Delete")]
+        public void DeleteQuestion(QuestionDTO question)
         {
-            _repositoryImp.Delete<Question>(question);
+            Question deleteQuestion = _stackOverflowContext.Questions.Where(item => item.QuestionId == question.QuestionID).FirstOrDefault();
+            if (deleteQuestion != null)
+            {
+                deleteQuestion.QuestionId = question.QuestionID;
+                _repositoryImp.Delete<Question>(deleteQuestion);
+            }
+            
         }
 
         [HttpPost]
-        public void UpdateQuestion(Question question)
+        [Route("Update")]
+        public void UpdateQuestion(EditQuestionDTO question)
         {
-            _repositoryImp.Update<Question>(question);
+            Question updateQuestion = _stackOverflowContext.Questions.Where(item => item.QuestionId == question.QuestionID).FirstOrDefault();
+            if (updateQuestion != null)
+            {
+                updateQuestion.QuestionName = question.QuestionName;
+                updateQuestion.QuestionDateAndTime = question.QuestionDateAndTime;
+                updateQuestion.CategoryId = question.CategoryID;
+                _repositoryImp.Update<Question>(updateQuestion);
+            }
         }
 
         [HttpPost]
+        [Route("votes/question/{questionID}/{value}")]
         public void UpdateQuestionVotesCount(int? questionID, int value)
         {
             Question question = _stackOverflowContext.Questions.Where(item => item.QuestionId == questionID).FirstOrDefault();
@@ -51,6 +80,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        [Route("votes/answer/{questionID}/{value}")]
         public void UpdateQuestionAnswerCount(int? questionId, int value)
         {
             Question question = _stackOverflowContext.Questions.Where(item => item.QuestionId == questionId).FirstOrDefault();
@@ -62,7 +92,8 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public void UpdateQuestionViewsCount(int questionId, int value)
+        [Route("votes/view/{questionID}/{value}")]
+        public void UpdateQuestionViewCount(int questionId, int value)
         {
             Question question = _stackOverflowContext.Questions.Where(item => item.QuestionId == questionId).FirstOrDefault();
             if (question != null)
@@ -76,16 +107,99 @@ namespace API.Controllers
         #region GetMethod
         [HttpGet]
         [Route("")]
-        public List<Question> GetQuestions()
+        public List<QuestionDTO> GetQuestions()
         {
-            List<Question> questions = _stackOverflowContext.Questions.OrderByDescending(item => item.QuestionDateAndTime).ToList();
+            List<Question> questionsInDB = _stackOverflowContext.Questions.OrderByDescending(item => item.QuestionDateAndTime).ToList();
+            List<QuestionDTO> questions = new List<QuestionDTO>();
+            if (questionsInDB.Count > 0)
+            {
+                foreach (Question item in questionsInDB)
+                {
+                    questions.Add(new QuestionDTO()
+                    {
+                        QuestionID = item.QuestionId,
+                        QuestionName = item.QuestionName,
+                        QuestionDateAndTime = (DateTime)item.QuestionDateAndTime,
+                        UserID = (int)item.UserId,
+                        CategoryID = (int)item.CategoryId,
+                        VotesCount = (int)item.VotesCount,
+                        AnswersCount = (int)item.AnswersCount,
+                        ViewsCount = (int)item.ViewsCount,
+                        
+                    });
+                }
+            }
             return questions;
         }
+
         [HttpGet]
-        [Route("{questionsID}")]
-        public Question GetQuestionbyID(int questionsID)
+        [Route("{questionsID}/{userID}")]
+        public QuestionDTO GetQuestionbyID(int questionsID, int userID)
         {
-            Question question = _stackOverflowContext.Questions.Where(item => item.QuestionId == questionsID).FirstOrDefault() ;
+            Question questionInDB = _stackOverflowContext.Questions.Include(answer => answer.Answers).ThenInclude(vote => vote.Votes)
+                .Where(item => item.QuestionId == questionsID)
+                .FirstOrDefault();
+            QuestionDTO question = null;
+            if (questionInDB != null)
+            {
+                #region mapQuestion
+                question = new QuestionDTO()
+                {
+                    QuestionID = questionInDB.QuestionId,
+                    QuestionName = questionInDB.QuestionName,
+                    QuestionDateAndTime = (DateTime)questionInDB.QuestionDateAndTime,
+                    UserID = (int)questionInDB.UserId,
+                    CategoryID = (int)questionInDB.CategoryId,
+                    VotesCount = (int)questionInDB.VotesCount,
+                    ViewsCount = (int)questionInDB.ViewsCount,
+                    Category = new CategoryDTO(),
+                    Answers = new List<AnswerDTO>(),
+                    User = new UserDTO()
+                    
+                };
+                foreach (Answer item in questionInDB.Answers)
+                {
+                    AnswerDTO insertAnswer = new AnswerDTO()
+                    {
+                        AnswerID = item.AnswerId,
+                        AnswerText = item.AnswerText,
+                        AnswerDateAndTime = (DateTime)((DateTime)item.AnswerDateAndTime == null ? null : item.AnswerDateAndTime),
+                        UserID = (int)(item.UserId == null ? null : item.UserId),
+                        QuestionID = (int)item.QuestionId,
+                        VotesCount = (int)item.VotesCount,
+                        Votes = new List<VoteDTO>(),
+                        User = new UserDTO()
+                    };
+                    
+
+                    foreach (Vote voteAnswer in item.Votes)
+                    {
+                        VoteDTO vote = new VoteDTO();
+                        {
+                            vote.AnswerID = (int)voteAnswer.AnswerId;
+                            vote.UserID = (int)voteAnswer.UserId;
+                            vote.VoteID = voteAnswer.VoteId;
+                            vote.VoteValue = (int)voteAnswer.VoteValue;
+                        }
+                        insertAnswer.Votes.Add(vote);
+                        
+                    }
+                    question.Answers.Add(insertAnswer);
+
+                }
+
+                foreach (AnswerDTO item in question.Answers)
+                {
+                    item.CurrentVoteType = 0;
+                    VoteDTO vote = item.Votes.Where(temp => temp.UserID == userID).FirstOrDefault();
+                    if (vote != null)
+                    {
+                        item.CurrentVoteType = vote.VoteValue;
+                    }
+                }
+                #endregion
+            }
+
             return question;
         }
         #endregion
