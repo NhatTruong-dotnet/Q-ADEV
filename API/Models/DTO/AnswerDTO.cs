@@ -14,7 +14,7 @@ namespace API.Models.DTO
         public int QuestionID { get; set; }
         public int VotesCount { get; set; }
         public int CurrentVoteType { get; set; }
-        public virtual UserDTO? User { get; set; }
-        public virtual ICollection<VoteDTO>? Votes { get; set; }
+        public virtual UserDTO User { get; set; }
+        public virtual ICollection<VoteDTO> Votes { get; set; }
     }
 }
