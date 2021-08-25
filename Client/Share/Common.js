@@ -12,7 +12,7 @@ function isUserExists() {
                 '<a class="nav-link" href="/home/contact">Categories</a>' +
             "</li>" +
             '<li class="nav-item">' +
-                '<a class="nav-link" href="/home/contact">Questions</a>' +
+                '<a class="nav-link" href="../Main/Questions/QuestionsIndex.html">Questions</a>' +
             " </li>" +
             '<li class="nav-item dropdown">' +
                 '<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">' +

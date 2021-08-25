@@ -109,7 +109,7 @@ namespace API.Controllers
         [Route("")]
         public List<QuestionDTO> GetQuestions()
         {
-            List<Question> questionsInDB = _stackOverflowContext.Questions.OrderByDescending(item => item.QuestionDateAndTime).ToList();
+            List<Question> questionsInDB = _stackOverflowContext.Questions.OrderByDescending(item => item.QuestionDateAndTime).Include(item => item.Category).ToList();
             List<QuestionDTO> questions = new List<QuestionDTO>();
             if (questionsInDB.Count > 0)
             {
@@ -125,7 +125,7 @@ namespace API.Controllers
                         VotesCount = (int)item.VotesCount,
                         AnswersCount = (int)item.AnswersCount,
                         ViewsCount = (int)item.ViewsCount,
-                        
+                        User = new UserDTO() { Name = _stackOverflowContext.Users.Where(user => user.UserId == item.UserId).First().Name}
                     });
                 }
             }
