@@ -1,10 +1,8 @@
 import { apiLink } from '../../Share/constValue.js';
 
 const getQuestionsUrl = apiLink.value + 'questions';
-var questions  = GetQuestions();
 let questionsDisplay = document.getElementById("questionsDisplay");
-
-function GetQuestions() {
+ function  GetQuestions() {
    return $.ajax({
         type: "get",
         url: getQuestionsUrl ,
@@ -12,8 +10,10 @@ function GetQuestions() {
         dataType: "json"
     });
 };
+let questions  =  GetQuestions();
 
 function displayQuestions(){
+    
     questions['responseJSON'].forEach(element => {
         let displayName ="";
          if(localStorage.getItem("CurrentUserID") == element['userID']) {
@@ -43,7 +43,8 @@ function displayQuestions(){
         console.log(contain);
     }
 }
+
 $(document).ready(function () {
     displayQuestions();
-    console.log(questions);
+
 });
