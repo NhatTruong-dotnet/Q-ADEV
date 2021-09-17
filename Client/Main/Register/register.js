@@ -1,15 +1,20 @@
+import { apiLink } from '../../Share/constValue.js';
+
 let btnSubmit = document
   .getElementById("btnSubmit")
   .addEventListener("click", validate);
 const EMAIL_REGEX = new RegExp("^\\S+@\\S+\\.\\S+$");
+const USER_API_URL = apiLink.value + 'users'+'/register';
 let isSubmited = false;
 let isValid = true;
 let emailInput = document.getElementById("Email");
 let passwordInput = document.getElementById("Password");
 let confirmPassowrdInput = document.getElementById("ConfirmPassword");
 let nameInput = document.getElementById("Name");
+let mobileInput = document.getElementById("Mobile");
 let emailErrorMessage = document.getElementById("emailErrorMessage");
 let passwordErrorMessage = document.getElementById("passwordErrorMessage");
+let mobileErrorMessage = document.getElementById("mobileErrorMessage");
 let confirmPasswordErrorMessage = document.getElementById(
   "confirmPasswordErrorMessage"
 );
@@ -21,8 +26,30 @@ function validate() {
   validateSubmitPassword();
   validateSubmitName();
   validateSubmitConfirmPassword();
+  validateSubmitMobile();
+  console.log(isValid)
   if (isValid) {
-    console.log("submit");
+      console.log(USER_API_URL)
+
+    $.ajax({
+        type: "post",
+        url: USER_API_URL ,
+        data: JSON.stringify({
+            "Email": emailInput.value,
+            "Password":passwordInput.value,
+            "ConfirmPassword": confirmPassowrdInput.value,
+            "Name": nameInput.value,
+            "Mobile":  mobileInput.value
+        }),
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        success: function(data){
+            console.log("done")
+        },
+        error: function(error){
+            console.log(error)
+        }
+    });
   }
 }
 
@@ -31,6 +58,7 @@ function validateFormInput(
   errorMessageControl,
   textErrorMessage
 ) {
+    controlInput.classList.add("invalid");
   errorMessageControl.classList.add("invalid");
   errorMessageControl.classList.remove("text-muted");
   errorMessageControl.innerText = textErrorMessage;
@@ -80,6 +108,18 @@ function validateSubmitPassword() {
   }
 }
 
+function validateSubmitMobile() {
+    if (mobileInput.value == "") {
+      validateFormInput(
+        mobileInput,
+        mobileErrorMessage,
+        "Mobile is required"
+      );
+      toggleValidateControl(true, mobileErrorMessage, mobileInput);
+      isValid = false;
+    }
+}
+
 function validateSubmitConfirmPassword() {
   if (confirmPassowrdInput.value == "") {
     validateFormInput(
@@ -119,8 +159,8 @@ passwordInput.addEventListener("change", () => {
       "Password is required"
     );
     toggleValidateControl(true, passwordErrorMessage, passwordInput);
+    isValid = false;
   }
-  isValid = false;
 });
 
 confirmPassowrdInput.addEventListener("change", () => {
