@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+        <link rel="import" href="ShareLayout.html">
+        <link rel="stylesheet" href="../../Share/style.css">
+        <style>
+            .invalid{
+                border-color: red;
+                color: red;
+            }
+        </style>
+    <title>Q&A - TruongBui</title>
+</head>
+
+<body>
+    <div class="container-fuild">
+        <nav class="navbar navbar-expand-sm text-light navbar-light" >
+            <a href="" class="navbar-brand">Q&A-TruongBui</a>
+        
+
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#collapsibleNavBar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="collapsibleNavBar">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="./../Home/HomeLayout.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./../About/AboutIndex.html">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/home/contact">Contact</a>
+                </li>
+               
+            </ul>
+        </div>
+        <form class="form-inline" action="/home/search">
+            <input type="search" class="form-control mr-sm-2" style="width:150px;" placeholder="Search" name="str">
+            <button class="btn btn-success">Search</button>
+        </form>
+    </nav>
+    <div class="row m-5">
+        <div class="col-sm-12">
+            <h1>Registration</h1>
+            <form id="formRegister">
+                <div class="form-group">
+                  <label for="Email">Email address</label>
+                  <input type="email" class="form-control" id="Email" aria-describedby="emailHelp" placeholder="Enter email">
+                  <small id="emailErrorMessage" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div class="form-group">
+                  <label for="Password">Password</label>
+                  <input type="password" class="form-control" id="Password" placeholder="Password" >
+                  <small id="passwordErrorMessage" class="form-text invalid" hidden >Password is required.</small>
+                </div>
+                <div class="form-group">
+                    <label for="ConfirmPassword">Confirm Password</label>
+                    <input type="password" class="form-control" id="ConfirmPassword" placeholder="Confirm Password" >
+                    <small id="confirmPasswordErrorMessage" class="form-text invalid" hidden>Confirm Password is required.</small>
+                </div>   
+                <div class="form-group">
+                    <label for="ConfirmPassword">Name</label>
+                    <input type="text" class="form-control" id="Name" placeholder="Name">
+                    <small id="nameErrorMessage" class="form-text invaild" hidden>Name is required.</small>
+                </div> 
+                <div class="form-group">
+                    <label for="Mobile">Mobile</label>
+                    <input type="number" class="form-control" id="Mobile" placeholder="Mobile">
+                </div>  
+                <button type="button" id="btnSubmit" class="btn btn-primary">Submit</button>
+              </form>
+        </div>
+    </div>
+    </div>
+
+<script src="./register.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="./../../Share/Common.js"></script>
+
+</body>
+
+</html>

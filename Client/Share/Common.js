@@ -4,7 +4,7 @@ function isUserExists() {
    
     if (currentUserLogin == null) {
         $(container).append(
-            '<li class="nav-item"><a class="nav-link" href="/home/contact">Login</a></li><li class="nav-item"><a class="nav-link" href="/home/contact">Register</a></li>'
+            '<li class="nav-item"><a class="nav-link" href="/home/contact">Login</a></li><li class="nav-item"><a class="nav-link" href="../Register/Register.html ">Register</a></li>'
         );
     } else {
         $(container).append(
