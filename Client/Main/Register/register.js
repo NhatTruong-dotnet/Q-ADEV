@@ -1,5 +1,5 @@
 import { apiLink } from "../../Share/constValue.js";
-
+//#region Declare variable and CONST
 let btnSubmit = document
   .getElementById("btnSubmit")
   .addEventListener("click", validate);
@@ -22,15 +22,19 @@ let confirmPasswordErrorMessage = document.getElementById(
   "confirmPasswordErrorMessage"
 );
 let nameErrorMessage = document.getElementById("nameErrorMessage");
+//#endregion
 
 function validate() {
   isSubmited = true;
+  //#region call Validate
   validateSubmitEmail();
   validateSubmitPassword();
   validateSubmitName();
   validateSubmitConfirmPassword();
   validateSubmitMobile();
-  console.log(isValid);
+  //#endregion
+
+  //#region If Validate passed
   if (isValid) {
     console.log(USER_API_URL);
 
@@ -54,8 +58,9 @@ function validate() {
       },
     });
   }
+  //#endregion
 }
-
+//#region Validate
 function validateFormInput(
   controlInput,
   errorMessageControl,
@@ -246,7 +251,9 @@ emailInput.addEventListener("change", () => {
     isValid = true;
   }
 });
+//#endregion
 
+//#region Validate new user register
 function getUsersExist(){
   $.ajax({
     type: "get",
@@ -271,4 +278,6 @@ function checkUserExist(email) {
   }
   return false;
 }
+//#endregion
+
 getUsersExist();
