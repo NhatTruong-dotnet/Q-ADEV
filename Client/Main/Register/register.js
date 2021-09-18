@@ -1,10 +1,13 @@
-import { apiLink } from '../../Share/constValue.js';
+import { apiLink } from "../../Share/constValue.js";
 
 let btnSubmit = document
   .getElementById("btnSubmit")
   .addEventListener("click", validate);
 const EMAIL_REGEX = new RegExp("^\\S+@\\S+\\.\\S+$");
-const USER_API_URL = apiLink.value + 'users'+'/register';
+const USER_REGISTER_URL = apiLink.value + "users" + "/register";
+const USER_API_URL = apiLink.value + "users" ;
+const MOBILE_REGEX = new RegExp("^([0-9]){10}");
+let userExist = [];
 let isSubmited = false;
 let isValid = true;
 let emailInput = document.getElementById("Email");
@@ -27,28 +30,28 @@ function validate() {
   validateSubmitName();
   validateSubmitConfirmPassword();
   validateSubmitMobile();
-  console.log(isValid)
+  console.log(isValid);
   if (isValid) {
-      console.log(USER_API_URL)
+    console.log(USER_API_URL);
 
     $.ajax({
-        type: "post",
-        url: USER_API_URL ,
-        data: JSON.stringify({
-            "Email": emailInput.value,
-            "Password":passwordInput.value,
-            "ConfirmPassword": confirmPassowrdInput.value,
-            "Name": nameInput.value,
-            "Mobile":  mobileInput.value
-        }),
-        dataType: "json",
-        contentType: "application/json; charset=utf-8",
-        success: function(data){
-            console.log("done")
-        },
-        error: function(error){
-            console.log(error)
-        }
+      type: "post",
+      url: USER_REGISTER_URL,
+      data: JSON.stringify({
+        Email: emailInput.value,
+        Password: passwordInput.value,
+        ConfirmPassword: confirmPassowrdInput.value,
+        Name: nameInput.value,
+        Mobile: mobileInput.value,
+      }),
+      dataType: "json",
+      contentType: "application/json; charset=utf-8",
+      success: function (data) {
+        console.log("done");
+      },
+      error: function (error) {
+        console.log(error);
+      },
     });
   }
 }
@@ -58,7 +61,7 @@ function validateFormInput(
   errorMessageControl,
   textErrorMessage
 ) {
-    controlInput.classList.add("invalid");
+  controlInput.classList.add("invalid");
   errorMessageControl.classList.add("invalid");
   errorMessageControl.classList.remove("text-muted");
   errorMessageControl.innerText = textErrorMessage;
@@ -86,6 +89,11 @@ function validateSubmitEmail() {
     toggleValidateControl(true, emailErrorMessage, emailInput);
     isValid = false;
   }
+  else if(checkUserExist(emailInput.value)){
+    validateFormInput(emailInput, emailErrorMessage, "Email is exist");
+    toggleValidateControl(true, emailErrorMessage, emailInput);
+    isValid = false;
+  }
 }
 
 function validateSubmitName() {
@@ -109,15 +117,19 @@ function validateSubmitPassword() {
 }
 
 function validateSubmitMobile() {
-    if (mobileInput.value == "") {
-      validateFormInput(
-        mobileInput,
-        mobileErrorMessage,
-        "Mobile is required"
-      );
-      toggleValidateControl(true, mobileErrorMessage, mobileInput);
-      isValid = false;
-    }
+  if (mobileInput.value == "") {
+    validateFormInput(mobileInput, mobileErrorMessage, "Mobile is required");
+    toggleValidateControl(true, mobileErrorMessage, mobileInput);
+    isValid = false;
+  } else if (!MOBILE_REGEX.test(mobileInput.value)) {
+    validateFormInput(
+      mobileInput,
+      mobileErrorMessage,
+      "Mobile is invalid must 10 number "
+    );
+    toggleValidateControl(true, mobileErrorMessage, mobileInput);
+    isValid = false;
+  }
 }
 
 function validateSubmitConfirmPassword() {
@@ -183,7 +195,7 @@ confirmPassowrdInput.addEventListener("change", () => {
       confirmPassowrdInput
     );
     isValid = true;
-  } 
+  }
 });
 
 nameInput.addEventListener("change", () => {
@@ -197,6 +209,21 @@ nameInput.addEventListener("change", () => {
   }
 });
 
+mobileInput.addEventListener("change", () => {
+  if (!MOBILE_REGEX.test(mobileInput.value)) {
+    validateFormInput(
+      mobileInput,
+      mobileErrorMessage,
+      "Mobile is invalid must 10 number "
+    );
+    toggleValidateControl(true, mobileErrorMessage, mobileInput);
+    isValid = false;
+  } else if (isSubmited && mobileInput.value != "") {
+    toggleValidateControl(false, mobileErrorMessage, mobileInput);
+    isValid = true;
+  }
+});
+
 emailInput.addEventListener("change", () => {
   if (isSubmited && emailInput.value == "") {
     validateFormInput(emailInput, emailErrorMessage, "Email is required");
@@ -206,7 +233,12 @@ emailInput.addEventListener("change", () => {
     validateFormInput(emailInput, emailErrorMessage, "Email is invalid");
     toggleValidateControl(true, emailErrorMessage, emailInput);
     isValid = false;
-  } else if (isSubmited && emailInput.value != "") {
+  } 
+  else if(checkUserExist(emailInput.value)){
+    validateFormInput(emailInput, emailErrorMessage, "Email is exist");
+    toggleValidateControl(true, emailErrorMessage, emailInput);
+    isValid = false;
+  }else if (isSubmited && emailInput.value != "") {
     emailInput.classList.remove("invalid");
     emailErrorMessage.classList.add("text-muted");
     emailErrorMessage.innerText =
@@ -214,3 +246,29 @@ emailInput.addEventListener("change", () => {
     isValid = true;
   }
 });
+
+function getUsersExist(){
+  $.ajax({
+    type: "get",
+    url: USER_API_URL ,
+    data: "data",
+    dataType: "json",
+    contentType: "application/json; charset=utf-8",
+    success: function(data){
+        pushUsersIntoMemory(data);
+    }
+})};
+function pushUsersIntoMemory(data){
+  for (let index = 0; index < data.length; index++) {
+    userExist.push( data[index].email);
+  }
+}
+function checkUserExist(email) {
+  for (let index = 0; index < userExist.length; index++) {
+    if (userExist[index] == email) {
+      return true;
+    }
+  }
+  return false;
+}
+getUsersExist();
