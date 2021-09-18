@@ -37,7 +37,7 @@ $(document).ready(function () {
     isUserExists();
 });
 function logout(){
-    localStorage.removeItem("CurrentUserName ");
+    localStorage.removeItem("CurrentUserName");
     localStorage.removeItem("CurrentUserID");
     window.location.href = NAVIGATE_LOGOUT;
 }

@@ -47,14 +47,14 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("Update")]
-        public void UpdateUser(UserDTO user)
+        [Route("Update/{userEmail}/{userName}/{Mobile}")]
+        public void UpdateUser(string userEmail, string userName, string Mobile)
         {
-            User updateUser = GetUserByEmail(user.Email);
-            updateUser.Email = user.Email;
-            updateUser.Name = user.Name;
-            updateUser.PasswordHash = SHA256HashGenerator.GenerateHash(user.Password);
-            updateUser.Mobile = user.Mobile;
+            User updateUser = GetUserByEmail(userEmail);
+            updateUser.Email = userEmail;
+            updateUser.Name = userName;
+            //updateUser.PasswordHash = SHA256HashGenerator.GenerateHash(user.Password);
+            updateUser.Mobile = Mobile;
             _repositoryImp.Update<User>(updateUser);
         }
         #endregion
