@@ -1,4 +1,8 @@
+let currentEnvURL = "http://127.0.0.1:5500/Client/Main/"
 
+const NAVIGATE_LOGOUT = currentEnvURL + "Home/HomeLayout.html";
+const NAVIGATE_CHANGEPROFILE = currentEnvURL + "ChangeProfile/ChangeProfile.html";
+const NAVIGATE_CHANGEPASSWORD = currentEnvURL + "ChangePassword/ChangePassword.html";
 function isUserExists() {
     let currentUserLogin = localStorage.getItem("CurrentUserName");
     let container = $("#collapsibleNavBar .navbar-nav");
@@ -21,9 +25,9 @@ function isUserExists() {
                     localStorage.getItem("CurrentUserName") +
                 "</a>" +
                 '<div class="dropdown-menu bg-info">' +
-                    '<a class="dropdown-item" href="/account/logout">Logout</a>' +
-                    '<a class="dropdown-item" href="/account/changeprofile">Change Profile</a>' +
-                    '<a class="dropdown-item" href="/account/changepassword">Change Password</a>' +
+                    '<a class="dropdown-item" onclick="logout()">Logout</a>' +
+                    '<a class="dropdown-item"  onclick="changeProfile()">Change Profile</a>' +
+                    '<a class="dropdown-item"  onclick="changePassword()">Change Password</a>' +
                 "</div>" +
             "</li>"
         );
@@ -32,3 +36,18 @@ function isUserExists() {
 $(document).ready(function () {
     isUserExists();
 });
+function logout(){
+    localStorage.removeItem("CurrentUserName ");
+    localStorage.removeItem("CurrentUserID");
+    window.location.href = NAVIGATE_LOGOUT;
+}
+
+function changeProfile(){
+    
+    window.location.href = NAVIGATE_CHANGEPROFILE;
+}
+
+function changePassword(){
+   
+    window.location.href = NAVIGATE_CHANGEPASSWORD;
+}
