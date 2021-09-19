@@ -7,14 +7,17 @@ let questionsDisplay = document.getElementById("questionsDisplay");
         type: "get",
         url: getQuestionsUrl ,
         data: "data",
-        dataType: "json"
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        success: function(data){
+            displayQuestions(data);
+        }
     });
 };
-let questions  =  GetQuestions();
 
-function displayQuestions(){
-    
-    questions['responseJSON'].forEach(element => {
+function displayQuestions(questions){
+    console.log(questions)
+    questions.forEach(element => {
         let displayName ="";
          if(localStorage.getItem("CurrentUserID") == element['userID']) {
             displayName = 'you'
@@ -38,13 +41,12 @@ function displayQuestions(){
         
     });
     if(localStorage.getItem("CurrentUserID") != null) {
-        let contain = document.getElementById("questionIndex");
+        let contain = document.getElementById("tableQuestions");
         $(contain).append('<a href="" class="btn btn-primary">Add Question </a>');
         console.log(contain);
     }
 }
 
 $(document).ready(function () {
-    displayQuestions();
-
+    GetQuestions();
 });

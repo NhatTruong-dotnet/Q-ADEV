@@ -10,6 +10,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
         <link rel="import" href="ShareLayout.html">
+        <style>
+            .invalid{
+                border-color: red;
+                color: red;
+            }
+        </style>
         <link rel="stylesheet" href="../../Share/style.css">
     <title>Q&A - TruongBui</title>
 </head>
@@ -27,13 +33,13 @@
         <div class="collapse navbar-collapse" id="collapsibleNavBar">
             <ul class="navbar-nav">
                 <li class="nav-item active">
-                    <a class="nav-link" href="./HomeLayout.html">Home</a>
+                    <a class="nav-link" href="../Home/HomeLayout.html">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="./../About/AboutIndex.html">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/home/contact">Contact</a>
+                    <a class="nav-link" href="">Contact</a>
                 </li>
                
             </ul>
@@ -43,17 +49,17 @@
             <button class="btn btn-success">Search</button>
         </form>
     </nav>
-    </div>
-    <div class="container-fuild">
-       <div class="row">
-           <div class="col-sm-12 m-5" id="tableQuestions">
-               
-               <div class="table" id="questionsDisplay">
-
+    <div class="row m-3">
+        <div class="col-sm-12">
+            <h2>Categories</h2>
+               <div  class="m-2">
+                   <ul class="list-group list-group-flush" id="displayCategories">
+                       
+                   </ul>
                </div>
-           </div>
-       </div>
+        </div>
     </div>
+</div>
 
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
@@ -64,8 +70,16 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
     <script src="../../Share/Common.js"></script>
-    <script type="module" src="../Home/home.js"></script>
-
+    <script type="module" src="./Categories.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    <!-- CSS -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+    <!-- Default theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
+    <!-- Semantic UI theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css"/>
+    <!-- Bootstrap theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/>
 </body>
 
 </html>
