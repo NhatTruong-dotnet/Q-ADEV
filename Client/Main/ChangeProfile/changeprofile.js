@@ -74,7 +74,6 @@ function validateSubmitName() {
 }
 
 
-
 function validateSubmitMobile() {
   if (mobileInput.value == "") {
     validateFormInput(mobileInput, mobileErrorMessage, "Mobile is required");

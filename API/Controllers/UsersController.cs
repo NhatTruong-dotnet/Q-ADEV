@@ -57,6 +57,15 @@ namespace API.Controllers
             updateUser.Mobile = Mobile;
             _repositoryImp.Update<User>(updateUser);
         }
+        [HttpPost]
+        [Route("Update/{userPassword}/{userEmail}")]
+        public void UpdateUserPassword(string userPassword,string userEmail)
+        {
+            User updateUser = GetUserByEmail(userEmail);
+            updateUser.Email = userEmail;
+            updateUser.PasswordHash = SHA256HashGenerator.GenerateHash(userPassword);
+            _repositoryImp.Update<User>(updateUser);
+        }
         #endregion
 
         #region GetMethod
