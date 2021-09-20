@@ -1,12 +1,15 @@
-import { apiLink } from '../../Share/constValue.js';
+let apiLink ="https://localhost:5001/api/";
 
-const getQuestionsUrl = apiLink.value + 'questions';
+let NAVIGATE_VIEW_QUESTION = "http://127.0.0.1:5500/Client/Main/ViewQuestions/ViewQuestions.html";
+const getQuestionsUrl = apiLink + 'questions';
+const UPDATE_VIEWS_COUNT = apiLink + 'questions/votes/view/';
+
 let questionsDisplay = document.getElementById("questionsDisplay");
- function  GetQuestions() {
+
+function  GetQuestions() {
    return $.ajax({
         type: "get",
         url: getQuestionsUrl ,
-        data: "data",
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         success: function(data){
@@ -14,7 +17,18 @@ let questionsDisplay = document.getElementById("questionsDisplay");
         }
     });
 };
+function clickQuestions(idQuestions){
+    $.ajax({
+        type: "post",
+        url: UPDATE_VIEWS_COUNT+`${idQuestions}/`+"1" ,
+        dataType: "json",
+        contentType: "application/json; charset=utf-8"
+    }).done(
+        localStorage.setItem("idQuestionsClick", idQuestions),
+        window.location.href = NAVIGATE_VIEW_QUESTION
+    );
 
+}
 function displayQuestions(questions){
     console.log(questions)
     questions.forEach(element => {
@@ -30,8 +44,9 @@ function displayQuestions(questions){
                 '<td><span class="badge badge-secondary">'+element['answersCount']+'</span> Answers</td>'+
                 '<td><span class="badge badge-secondary">'+element['viewsCount']+'</span> Views</td>'+
                 '<td class="text-dark">'+
-                    '<a href="/questions/view/'+element['questionID']+'" class="text-primary">'+element['questionName']+'</a>'+
+                    '<a '+`value=${element['questionID']}`+' class="text-primary" onclick='+`"clickQuestions(${element["questionID"]})">`+element['questionName']+'</a>'+
                     '<br />'+
+                    `<span class="badge badge-info" id="CategorySpan">${element.category.categoryName}</span>`+
                 '</td>' +
                 '<td> by '+displayName+''+
                 

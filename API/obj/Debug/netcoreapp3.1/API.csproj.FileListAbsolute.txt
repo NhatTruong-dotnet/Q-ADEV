@@ -65,4 +65,4 @@ C:\L&D\MY-DEVELOPMENT\MEAN\Q-ADEV\API\bin\Debug\netcoreapp3.1\Microsoft.EntityFr
 C:\L&D\MY-DEVELOPMENT\MEAN\Q-ADEV\API\bin\Debug\netcoreapp3.1\Microsoft.Exchange.WebServices.Auth.dll
 C:\L&D\MY-DEVELOPMENT\MEAN\Q-ADEV\API\bin\Debug\netcoreapp3.1\Microsoft.Exchange.WebServices.dll
 C:\L&D\MY-DEVELOPMENT\MEAN\Q-ADEV\API\obj\Debug\netcoreapp3.1\API.GeneratedMSBuildEditorConfig.editorconfig
-C:\L&D\MY-DEVELOPMENT\MEAN\Q-ADEV\API\obj\Debug\netcoreapp3.1\API.csproj.AssemblyReference.cache
+C:\L&D\MY-DEVELOPMENT\MEAN\Q-ADEV\API\obj\Debug\netcoreapp3.1\API.csprojAssemblyReference.cache

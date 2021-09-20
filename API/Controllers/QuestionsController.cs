@@ -16,10 +16,14 @@ namespace API.Controllers
     {
         private readonly StackOverflowContext _stackOverflowContext;
         private readonly RepositoryImp _repositoryImp;
+        private UsersController usersController ;
+        private CategoriesController categoriesController;
         public QuestionsController(StackOverflowContext stackOverflowContext, RepositoryImp repositoryImp)
         {
             _stackOverflowContext = stackOverflowContext;
             _repositoryImp = repositoryImp;
+            usersController = new UsersController(stackOverflowContext, repositoryImp);
+            categoriesController = new CategoriesController(stackOverflowContext, repositoryImp);
         }
 
         #region PostMethod
@@ -124,6 +128,7 @@ namespace API.Controllers
                         CategoryID = (int)item.CategoryId,
                         VotesCount = (int)item.VotesCount,
                         AnswersCount = (int)item.AnswersCount,
+                        Category = categoriesController.GetCategoryByID((int)item.CategoryId),
                         ViewsCount = (int)item.ViewsCount,
                         User = new UserDTO() { Name = _stackOverflowContext.Users.Where(user => user.UserId == item.UserId).First().Name}
                     });
@@ -152,9 +157,9 @@ namespace API.Controllers
                     CategoryID = (int)questionInDB.CategoryId,
                     VotesCount = (int)questionInDB.VotesCount,
                     ViewsCount = (int)questionInDB.ViewsCount,
-                    Category = new CategoryDTO(),
+                    Category = categoriesController.GetCategoryByID((int)questionInDB.CategoryId),
                     Answers = new List<AnswerDTO>(),
-                    User = new UserDTO()
+                    User = usersController.GetUserByID((int)questionInDB.UserId)
                     
                 };
                 foreach (Answer item in questionInDB.Answers)
