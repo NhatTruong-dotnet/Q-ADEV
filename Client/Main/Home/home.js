@@ -57,7 +57,7 @@ function displayQuestions(questions){
     });
     if(localStorage.getItem("CurrentUserID") != null) {
         let contain = document.getElementById("tableQuestions");
-        $(contain).append('<a href="" class="btn btn-primary">Add Question </a>');
+        $(contain).append('<a href="./../Questions/NewQuestion.html" class="btn btn-primary">Add Question </a>');
         console.log(contain);
     }
 }

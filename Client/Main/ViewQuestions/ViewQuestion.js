@@ -194,7 +194,7 @@ function post(answerID){
   }
     $.ajax({
       type: "post",
-      url: ANSWER_API+'/delete',
+      url: urlCall,
       data:dataPost,
       dataType: "json",
       contentType: "application/json; charset=utf-8"
