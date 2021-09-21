@@ -18,13 +18,14 @@ namespace API.Controllers
         private readonly RepositoryImp _repositoryImp;
         private readonly QuestionsController _questionsController;
         private readonly VotesController _votesController;
-
+        private UsersController usersController;
         public AnswersController(StackOverflowContext stackOverflowContext, RepositoryImp repositoryImp)
         {
             _stackOverflowContext = stackOverflowContext;
             _repositoryImp = repositoryImp;
             _questionsController = new QuestionsController(stackOverflowContext, repositoryImp);
             _votesController = new VotesController(stackOverflowContext, repositoryImp);
+            usersController = new UsersController(stackOverflowContext, repositoryImp);
         }
 
         #region PostMethod
@@ -110,7 +111,7 @@ namespace API.Controllers
                     QuestionID = (int)item.QuestionId,
                     VotesCount = (int)item.VotesCount,
                     Votes = new List<VoteDTO>(),
-                    User = new UserDTO()
+                    User = usersController.GetUserByID((int)item.UserId)
                 };
                 foreach (Vote voteAnswer in item.Votes)
                 {

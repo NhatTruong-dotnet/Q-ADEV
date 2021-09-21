@@ -173,7 +173,7 @@ namespace API.Controllers
                         QuestionID = (int)item.QuestionId,
                         VotesCount = (int)item.VotesCount,
                         Votes = new List<VoteDTO>(),
-                        User = new UserDTO()
+                        User = usersController.GetUserByID((int)(item.UserId == null ? null : item.UserId))
                     };
                     
 

@@ -9,7 +9,6 @@ const QUESTION_DISPLAY_CONTAINER = document.getElementById("questionDisplay");
 const QUESTION_DISPLAY_INLINE = document.getElementById("inline");
 const ANSWER_DISPLAY_CONTAINER = document.getElementById("answer");
 const UPDATE_ANSWER_VOTES_API = apiLink + "Answers/Update/Votes";
-//Update/Votes/{answerID}/{userID}/{value}
 function updateVoteValue(answerID, userID , voteValue,currentVoteType) {
   $.ajax({
     type: "post",
@@ -51,7 +50,7 @@ function getQuestionByID() {
       if (data.userID != localStorage.getItem("CurrentUserID")) {
         displayCreatedBy = data.user.name;
       }
-
+      
       $(QUESTION_DISPLAY_CONTAINER).append(`<h3>${data.questionName}</h3>`);
       $(QUESTION_DISPLAY_INLINE).append(`
                 <div class="col-sm-2"><span class="badge badge-info" id="CategorySpan">${displayCategory}</span></div>
@@ -67,9 +66,16 @@ function getQuestionByID() {
         $(ANSWER_DISPLAY_CONTAINER).append(`<h4>No answer yet</h4>`);
       } else {
         for (let index = 0; index < data.answers.length; index++) {
+          let answerBy ="you";
           let srcUpVoteImage = "../../Share/Image/up-empty.png";
           let scrDownVoteImage = "../../Share/Image/down-empty.png";
           let voteID = 0;
+          if (data.answers[index].user.userID != localStorage.getItem("CurrentUserID")) {
+            answerBy = data.answers[index].user.name;
+          }
+          if(data.answers[index].userID == localStorage.getItem("CurrentUserID")){
+            document.getElementById("btnAddNewAnswer").innerText = "Add another answer"
+          }
           if (data.answers[index].currentVoteType == 1) {
             srcUpVoteImage = "../../Share/Image/up-color.png";
           }
@@ -86,7 +92,7 @@ function getQuestionByID() {
           }
 
           $(ANSWER_DISPLAY_CONTAINER).append(`
-                        <div class="row m-2 p-2 col-12">
+                        <div class="row m-4 p-2 col-12">
                             <span class="badge badge-secondary votescount"> ${
                               data.answers[index].votesCount
                             }</span>
@@ -104,8 +110,11 @@ function getQuestionByID() {
             data.answers[index].currentVoteType
           }, ${voteID})"><img src="${scrDownVoteImage}" width="24px"/></a>
                             </span>
-                            <span class="p-2" ></span>
-                            ${data.answers[index].answerText}</div>`);
+                              <span class="p-2" ></span>
+                              <span class="col-6">${data.answers[index].answerText}</span>
+                              <div class="col-sm-2"><span class="text-info">by ${answerBy}</span></div>
+                              <div class="col-sm-2"><span class="text-success"> ${data.questionDateAndTime.substring( 0,10)}</span></div>
+                            </div>`);
         }
       }
     },
