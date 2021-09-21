@@ -20,13 +20,14 @@ namespace API.Controllers
             _repositoryImp = repositoryImp;
         }
         [HttpPost]
-        internal void UpdateVote(int answerID, int userID, int value)
+        [Route("{answerID}/{userID}/{value}")]
+        public void UpdateVote(int answerID, int userID, int value)
         {
             Vote vote = _stackOverflowContext.Votes.Where(item => item.AnswerId == answerID && item.UserId == userID).FirstOrDefault();
             if (vote != null)
             {
-                vote.VoteValue += value;
-                 
+                vote.VoteValue = value;
+                _stackOverflowContext.SaveChanges();
             }
             else
             {

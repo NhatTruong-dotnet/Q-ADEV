@@ -65,13 +65,25 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        [Route("Update/Votes/{answerID}/{userID}/{value}")]
-        public void UpdateAnswerVotesCount(int answerID, int userID, int value)
+        [Route("Update/Votes/{answerID}/{userID}/{value}/{currentVoteType}")]
+        public void UpdateAnswerVotesCount(int answerID, int userID, int value, int currentVoteType)
         {
             Answer answer = _stackOverflowContext.Answers.Where(item => item.AnswerId == answerID).FirstOrDefault();
             if (answer != null)
             {
-                answer.VotesCount += value;
+                if ( currentVoteType == 1 && value == 0)
+                {
+                    answer.VotesCount += -1;
+                }
+                else if(currentVoteType == -1 && value == 0)
+                {
+                    answer.VotesCount += 1;
+
+                }
+                else
+                {
+                    answer.VotesCount += value;
+                }
                 _stackOverflowContext.SaveChanges();
                 _questionsController.UpdateQuestionVotesCount(answer.QuestionId, 1);
                 _votesController.UpdateVote(answerID, userID, value);

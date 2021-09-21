@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "QPgIDKpMUjvozF0CBX2FoVJibWIeR+vkzDkR3FcYfcshT6q8nHQndTSJAndzhfraqdXjQhwH0h2Ek4yRwzZi4w==",
+  "dgSpecHash": "79vJR10bl0FNpagaTicNogJn+QBwgbcgBotv2Bvj6NaCuTz3AGgSFrsGb6Jv9KDrvtQyBGV2/N5yTGh3YvTdIg==",
   "success": true,
   "projectFilePath": "C:\\L&D\\MY-DEVELOPMENT\\MEAN\\Q-ADEV\\API\\API.csproj",
   "expectedPackageFiles": [
@@ -135,7 +135,8 @@
     "C:\\Users\\tbui48\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\tbui48\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\tbui48\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
-    "C:\\Users\\tbui48\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
+    "C:\\Users\\tbui48\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512",
+    "C:\\Users\\tbui48\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.18\\microsoft.netcore.app.host.win-x64.3.1.18.nupkg.sha512"
   ],
   "logs": [
     {

@@ -21,7 +21,7 @@ function isUserExists() {
             " </li>" +
             '<li class="nav-item dropdown">' +
                 '<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">' +
-                    '<img src="./../Images/user.png" width="20px" />' +
+                    '<img src="../../Images/user.png " width="20px" />' +
                     localStorage.getItem("CurrentUserName") +
                 "</a>" +
                 '<div class="dropdown-menu bg-info">' +

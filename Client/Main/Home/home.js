@@ -1,7 +1,7 @@
 let apiLink ="https://localhost:5001/api/";
 
-let NAVIGATE_VIEW_QUESTION = "http://127.0.0.1:5500/Client/Main/ViewQuestions/ViewQuestions.html";
-const getQuestionsUrl = apiLink + 'questions';
+const NAVIGATE_VIEW_QUESTION = "http://127.0.0.1:5500/Client/Main/ViewQuestions/ViewQuestions.html";
+const GET_QUESTIONS = apiLink + 'questions';
 const UPDATE_VIEWS_COUNT = apiLink + 'questions/votes/view/';
 
 let questionsDisplay = document.getElementById("questionsDisplay");
@@ -9,7 +9,7 @@ let questionsDisplay = document.getElementById("questionsDisplay");
 function  GetQuestions() {
    return $.ajax({
         type: "get",
-        url: getQuestionsUrl ,
+        url: GET_QUESTIONS ,
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         success: function(data){
