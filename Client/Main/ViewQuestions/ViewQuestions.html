@@ -50,8 +50,17 @@
           <div class="row" id="inline">
           </div>
           <div class="row" id="answer"></div>
-          <div class="row" id="AddNewAnswer">
-            <button type="button" id="btnAddNewAnswer" class="btn btn-primary">Post Your Answer</button>
+          <div id="AddNewAnswer" class="m-1" hidden>
+            <textarea id="answerText" name="answerText"class="m-1" rows="4" cols="150"></textarea>
+            <div class="row m-1">
+                <button type="button" class="btn btn-success " id="PostAns"  onclick="post(0)">Post</button>
+                <span style="width: 15px;"></span>
+                <button type="button" class="btn btn-danger" id="btnCancel" onclick="cancelPostAnswer()" >Cancel</button>
+            </div>
+            
+          </div>
+          <div class="row" >
+            <button type="button" id="btnAddNewAnswer" onclick="addNewAnswer(0)" class="btn btn-primary">Post Your Answer</button>
           </div>
        </div>
     </div>
