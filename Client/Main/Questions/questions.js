@@ -16,7 +16,6 @@ let questionsDisplay = document.getElementById("questionsDisplay");
 };
 
 function displayQuestions(questions){
-    console.log(questions)
     questions.forEach(element => {
         let displayName ="";
          if(localStorage.getItem("CurrentUserID") == element['userID']) {
@@ -35,7 +34,10 @@ function displayQuestions(questions){
                 '</td>' +
                 '<td> by '+displayName+''+
                 
-                '<td> on '+element['questionDateAndTime']+''+
+                '<td> on '+`${element['questionDateAndTime'].substring(
+                    0,
+                    10
+                  )}`+''+
             '</tr>'
         )
         

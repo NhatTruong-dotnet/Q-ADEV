@@ -30,7 +30,6 @@ function clickQuestions(idQuestions){
 
 }
 function displayQuestions(questions){
-    console.log(questions)
     questions.forEach(element => {
         let displayName ="";
          if(localStorage.getItem("CurrentUserID") == element['userID']) {
@@ -50,7 +49,10 @@ function displayQuestions(questions){
                 '</td>' +
                 '<td> by '+displayName+''+
                 
-                '<td> on '+element['questionDateAndTime']+''+
+                '<td> on '+`${element['questionDateAndTime'].substring(
+                    0,
+                    10
+                  )}`+''+
             '</tr>'
         )
         
@@ -58,7 +60,6 @@ function displayQuestions(questions){
     if(localStorage.getItem("CurrentUserID") != null) {
         let contain = document.getElementById("tableQuestions");
         $(contain).append('<a href="./../Questions/NewQuestion.html" class="btn btn-primary">Add Question </a>');
-        console.log(contain);
     }
 }
 

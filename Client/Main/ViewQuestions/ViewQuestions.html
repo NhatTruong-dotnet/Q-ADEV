@@ -11,7 +11,13 @@
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
         <link rel="import" href="ShareLayout.html">
         <link rel="stylesheet" href="../../Share/style.css">
-    <title>Q&A - TruongBui</title>
+        <title>Q&A - TruongBui</title>
+        <style>
+            .invalid{
+                    border-color: red;
+                    color: red;
+                }
+        </style>
 </head>
 
 <body>
@@ -52,6 +58,7 @@
           <div class="row" id="answer"></div>
           <div id="AddNewAnswer" class="m-1" hidden>
             <textarea id="answerText" name="answerText"class="m-1" rows="4" cols="150"></textarea>
+            <small id="answerErrorMessage" class="form-text text-muted">Thanks for your help !</small>
             <div class="row m-1">
                 <button type="button" class="btn btn-success " id="PostAns"  onclick="post(0)">Post</button>
                 <span style="width: 15px;"></span>

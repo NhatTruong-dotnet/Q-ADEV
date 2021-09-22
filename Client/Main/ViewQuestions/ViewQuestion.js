@@ -1,5 +1,6 @@
 //#region declare 
 let apiLink = "https://localhost:5001/api/";
+let isSubmited =  false;
 const API_QUESTION =
   apiLink +
   "questions" +
@@ -80,6 +81,7 @@ function getQuestionByID() {
           let srcUpVoteImage = "../../Share/Image/up-empty.png";
           let scrDownVoteImage = "../../Share/Image/down-empty.png";
           let voteID = 0;
+          let displayEditAndDelete = ""
           if (data.answers[index].user.userID != localStorage.getItem("CurrentUserID")) {
             answerBy = data.answers[index].user.name;
           }
@@ -100,7 +102,16 @@ function getQuestionByID() {
               voteID = data.answers[index].votes[i].voteID;
             }
           }
-
+          if(data.answers[index].userID == localStorage.getItem("CurrentUserID")){
+            displayEditAndDelete = ` <span>
+            <a href="#" onclick="addNewAnswer(${data.answers[index].answerID})">
+              <img src="../../Share/Image/edit-icon.png" width="24px"/>
+            </a>
+            <a href="#" onclick="deleteAns(${data.answers[index].answerID})">
+              <img src="../../Share/Image/delete-icon.png" width="24px"/>
+            </a>
+          </span>`
+          }
           $(ANSWER_DISPLAY_CONTAINER).append(`
                         <div class="row m-4 p-2 col-12">
                             <span class="badge badge-secondary votescount"> ${
@@ -118,16 +129,12 @@ function getQuestionByID() {
                               <span class="col-6">${data.answers[index].answerText}</span>
                               <div class="col-sm-2"><span class="text-info">by ${answerBy}</span></div>
                               <div class="col-sm-2"><span class="text-success"> ${data.questionDateAndTime.substring( 0,10)}</span></div>
-                              <span>
-                                <a href="#" onclick="addNewAnswer(${data.answers[index].answerID})">
-                                  <img src="../../Share/Image/edit-icon.png" width="24px"/>
-                                </a>
-                                <a href="#" onclick="deleteAns(${data.answers[index].answerID})">
-                                  <img src="../../Share/Image/delete-icon.png" width="24px"/>
-                                </a>
-                              </span>
-                            </div>`);
+                                ${displayEditAndDelete}
+                              </div>`
+          );
+          
         }
+        
       }
     },
   });
@@ -140,6 +147,8 @@ function addNewAnswer(answerID){
     document.getElementById("AddNewAnswer").removeAttribute("hidden");
     document.getElementById("AddNewAnswer").style.visibility = "visibility"
     document.getElementById("btnAddNewAnswer").style.visibility = "hidden"
+    document.getElementById("answerText").value = ""
+
   }else{
     document.getElementById("AddNewAnswer").removeAttribute("hidden");
     document.getElementById("AddNewAnswer").style.visibility = "visibility"
@@ -149,7 +158,7 @@ function addNewAnswer(answerID){
       dataType: "json",
       contentType: "application/json; charset=utf-8",
       success: function(data){
-        document.getElementById("answerText").innerText = data.answerText
+        document.getElementById("answerText").value = data.answerText
       }
     })
     document.getElementById("btnAddNewAnswer").style.visibility = "hidden"
@@ -169,8 +178,16 @@ function cancelPostAnswer(){
 }
 
 function post(answerID){
+  isSubmited = true;
   console.log(localStorage.getItem("CurrentUserID"))
   let urlCall = ANSWER_API
+  if(document.getElementById("answerText").value == ""){
+    console.log("eror");
+    document.getElementById("answerErrorMessage").innerText = "Should not blank";
+    document.getElementById("answerErrorMessage").classList.remove("text-muted");
+    document.getElementById("answerErrorMessage").classList.add("invalid");
+    document.getElementById("answerText").classList.add("invalid");
+  }else{
   if (answerID == 0  ) {
     urlCall = ANSWER_API+'/add';
     dataPost=JSON.stringify({
@@ -200,8 +217,21 @@ function post(answerID){
       contentType: "application/json; charset=utf-8"
       
     }).done(window.location.href= './ViewQuestions.html')
+  }
 }
-
+document.getElementById("answerText").addEventListener("change",()=>{
+  if (isSubmited && document.getElementById("answerText").value) {
+      document.getElementById("answerErrorMessage").innerText = "Thanks for your help";
+      document.getElementById("answerErrorMessage").classList.add("text-muted");
+      document.getElementById("answerErrorMessage").classList.remove("invalid");
+      document.getElementById("answerText").classList.remove("invalid");
+  }else if(isSubmited && document.getElementById("questionText").value == ""){
+      document.getElementById("answerErrorMessage").innerText = "Should not blank";
+      document.getElementById("answerErrorMessage").classList.remove("text-muted");
+      document.getElementById("answerErrorMessage").classList.add("invalid");
+      document.getElementById("answerText").classList.add("invalid");
+  }
+})
 function deleteAns(answerID){
   $.ajax({
     type: "post",
